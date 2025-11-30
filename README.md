@@ -26,7 +26,7 @@ sneaker-engine/
 
 2. Create a virtual environment:
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    ```
 
 3. Activate the virtual environment:
@@ -38,9 +38,30 @@ sneaker-engine/
    pip install -r requirements.txt
    ```
 
-5. Run the FastAPI server:
+5. **Optional: Automatic venv activation**
+   
+   The backend directory includes a `.envrc` file for automatic virtual environment activation using `direnv`.
+   
+   To enable this:
    ```bash
-   python main.py
+   # Install direnv
+   sudo apt install direnv  # Ubuntu/Debian
+   # brew install direnv    # macOS
+   
+   # Add to your ~/.bashrc or ~/.zshrc
+   eval "$(direnv hook bash)"  # for bash
+   # eval "$(direnv hook zsh)" # for zsh
+   
+   # Allow direnv in the backend directory
+   cd backend
+   direnv allow
+   ```
+   
+   Now the venv will automatically activate when you enter the backend directory!
+
+6. Run the FastAPI server:
+   ```bash
+   python3 main.py
    ```
    Or with uvicorn directly:
    ```bash
