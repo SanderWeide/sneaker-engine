@@ -16,6 +16,28 @@ sneaker-engine/
 - Node.js (v18 or higher)
 - Python 3.8+
 - npm or yarn
+- PostgreSQL
+
+## Database Setup
+
+1. Start PostgreSQL:
+   ```bash
+   sudo service postgresql start
+   ```
+
+2. Create the database:
+   ```bash
+   sudo -u postgres psql
+   CREATE DATABASE sneaker_engine;
+   CREATE USER sneaker_user WITH PASSWORD 'your_password';
+   GRANT ALL PRIVILEGES ON DATABASE sneaker_engine TO sneaker_user;
+   \q
+   ```
+
+3. Create a `.env` file in the `backend` directory with your database credentials:
+   ```
+   DATABASE_URL=postgresql://sneaker_user:your_password@localhost/sneaker_engine
+   ```
 
 ## Backend Setup
 
