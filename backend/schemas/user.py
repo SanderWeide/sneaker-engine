@@ -36,6 +36,7 @@ class User(UserBase):
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
+    username: str
     first_name: str
     middle_name: Optional[str] = None
     last_name: str

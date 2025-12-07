@@ -35,6 +35,7 @@ def read_users_me(current_user: UserSchema = Depends(get_current_user)):
     return UserResponse(
         id=current_user.id,
         email=current_user.email,
+        username=current_user.username,
         first_name=current_user.first_name,
         middle_name=current_user.middle_name,
         last_name=current_user.last_name
