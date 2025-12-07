@@ -66,7 +66,7 @@ export class AuthService {
   signup(data: SignupData): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/api/users`, data)
       .pipe(
-        switchMap(user => {
+        switchMap(() => {
           // After signup, automatically log in and get user profile
           return this.login(data.email, data.password);
         })
