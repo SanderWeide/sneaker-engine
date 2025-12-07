@@ -22,6 +22,27 @@
   
   // Shadow Colors
   --shadow-light: rgba(0, 0, 0, 0.1);
+
+  // Mappings for new components
+  --bg-primary: var(--white);
+  --bg-secondary: var(--gray-lightest);
+  --text-primary: var(--gray-dark);
+  --text-secondary: var(--gray-medium);
+  
+  --card-bg: var(--white);
+  --card-border: var(--gray-lighter);
+  
+  --button-primary-bg: var(--primary-blue);
+  --button-primary-text: var(--white);
+  --button-primary-hover: var(--primary-blue-dark);
+  
+  --input-bg: var(--white);
+  --input-border: var(--gray-lighter);
+  --input-focus-border: var(--primary-blue);
+  
+  --shadow: var(--shadow-light);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+  --focus-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
 }
 
 * {

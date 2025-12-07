@@ -1,0 +1,68 @@
+<div class="inventory-container">
+  <h2>My Inventory</h2>
+
+  <div class="create-sneaker-section">
+    <h3>Add New Sneaker</h3>
+    <form [formGroup]="sneakerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="sku">SKU</label>
+        <input id="sku" type="text" formControlName="sku" class="input">
+      </div>
+      
+      <div class="form-group">
+        <label for="brand">Brand</label>
+        <input id="brand" type="text" formControlName="brand" class="input">
+      </div>
+
+      <div class="form-group">
+        <label for="model">Model</label>
+        <input id="model" type="text" formControlName="model" class="input">
+      </div>
+
+      <div class="form-group">
+        <label for="size">Size</label>
+        <input id="size" type="number" formControlName="size" class="input">
+      </div>
+
+      <div class="form-group">
+        <label for="color">Color</label>
+        <input id="color" type="text" formControlName="color" class="input">
+      </div>
+
+      <div class="form-group">
+        <label for="purchase_price">Purchase Price</label>
+        <input id="purchase_price" type="number" formControlName="purchase_price" class="input">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" class="input"></textarea>
+      </div>
+
+      <button type="submit" [disabled]="sneakerForm.invalid" class="btn-primary">Add Sneaker</button>
+    </form>
+  </div>
+
+  <div class="sneaker-list">
+    <h3>Your Sneakers</h3>
+    @if (sneakers().length === 0) {
+      <p>No sneakers in your inventory yet.</p>
+    } @else {
+      <div class="grid">
+        @for (sneaker of sneakers(); track sneaker.id) {
+          <div class="card">
+            <h4>{{ sneaker.brand }} {{ sneaker.model }}</h4>
+            <p><strong>SKU:</strong> {{ sneaker.sku }}</p>
+            <p><strong>Size:</strong> {{ sneaker.size }}</p>
+            @if (sneaker.color) {
+              <p><strong>Color:</strong> {{ sneaker.color }}</p>
+            }
+            @if (sneaker.purchase_price) {
+              <p><strong>Price:</strong> ${{ sneaker.purchase_price }}</p>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
