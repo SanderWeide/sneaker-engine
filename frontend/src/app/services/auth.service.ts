@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap, switchMap, map } from 'rxjs';
+import { Observable, BehaviorSubject, tap, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 interface User {
@@ -45,18 +45,19 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(email: string, password: string): Observable<LoginResponse> {
+  login(email: string, password: string): Observable<User> {
     const formData = new FormData();
     formData.append('username', email);
     formData.append('password', password);
 
     return this.http.post<LoginResponse>(`${this.apiUrl}/api/users/login`, formData)
       .pipe(
-        tap(response => {
+        switchMap(response => {
           if (response.access_token) {
             localStorage.setItem('access_token', response.access_token);
-            this.getUserProfile().subscribe();
+            return this.getUserProfile();
           }
+          throw new Error('No access token received');
         })
       );
   }
@@ -65,10 +66,8 @@ export class AuthService {
     return this.http.post<User>(`${this.apiUrl}/api/users`, data)
       .pipe(
         switchMap(user => {
-          // After signup, automatically log in
-          return this.login(data.email, data.password).pipe(
-            map(() => user)
-          );
+          // After signup, automatically log in and get user profile
+          return this.login(data.email, data.password);
         })
       );
   }
