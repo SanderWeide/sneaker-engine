@@ -31,3 +31,14 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    first_name: str
+    middle_name: Optional[str] = None
+    last_name: str
+
+    class Config:
+        from_attributes = True
