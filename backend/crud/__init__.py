@@ -6,7 +6,6 @@ from .user import (
     create_user,
     update_user,
     delete_user,
-    verify_password,
 )
 from .sneaker import (
     get_sneaker,
@@ -24,7 +23,6 @@ __all__ = [
     "create_user",
     "update_user",
     "delete_user",
-    "verify_password",
     "get_sneaker",
     "get_sneakers",
     "create_sneaker",
