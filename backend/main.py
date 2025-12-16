@@ -12,9 +12,16 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Sneaker Engine API", version="1.0.0")
 
 # Configure CORS for Angular frontend
+origins = [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # Angular default port
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
