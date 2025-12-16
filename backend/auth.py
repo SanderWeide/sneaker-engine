@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import JWTError, jwt
@@ -10,8 +12,10 @@ from database import get_db
 import crud
 from schemas import TokenData
 
+load_dotenv()
+
 # Configuration
-SECRET_KEY = "your-secret-key-here-change-this-in-production" # TODO: Change this to a secure key in production
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here-change-this-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

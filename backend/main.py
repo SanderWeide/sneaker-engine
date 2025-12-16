@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -6,13 +8,17 @@ from sqlalchemy import text
 from database import engine, Base, get_db
 from routes import users_router, sneakers_router
 
+load_dotenv()
+
 # Create tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Sneaker Engine API", version="1.0.0")
 
 # Configure CORS for Angular frontend
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:4200")
 origins = [
+    frontend_url,
     "http://localhost:4200",
     "http://127.0.0.1:4200",
     "http://localhost:8000",
