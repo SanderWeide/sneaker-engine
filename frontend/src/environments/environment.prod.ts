@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: ''  // Relative path for Nginx proxy
+  apiUrl: 'https://sneaker-engine-dev-alb-41711602.eu-central-1.elb.amazonaws.com'
 };
