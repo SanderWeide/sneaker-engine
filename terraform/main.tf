@@ -30,6 +30,19 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+
+  default_tags {
+    tags = {
+      Project     = "sneaker-engine"
+      Environment = var.environment
+      ManagedBy   = "terraform"
+    }
+  }
+}
+
 # Data sources
 data "aws_availability_zones" "available" {
   state = "available"

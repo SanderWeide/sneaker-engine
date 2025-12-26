@@ -30,7 +30,12 @@ output "alb_dns_name" {
 
 output "backend_url" {
   description = "URL to access the backend API"
-  value       = "https://${aws_lb.backend.dns_name}"
+  value       = "https://${var.backend_subdomain}.${var.domain_name}"
+}
+
+output "frontend_url" {
+  description = "URL to access the frontend"
+  value       = "https://${var.subdomain}.${var.domain_name}"
 }
 
 output "frontend_bucket_name" {
@@ -53,10 +58,6 @@ output "cloudfront_domain_name" {
   value       = aws_cloudfront_distribution.frontend.domain_name
 }
 
-output "frontend_url" {
-  description = "URL to access the frontend"
-  value       = "https://${aws_cloudfront_distribution.frontend.domain_name}"
-}
 
 output "aws_region" {
   description = "AWS region where resources are deployed"

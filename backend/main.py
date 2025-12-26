@@ -25,8 +25,9 @@ origins = [
     "http://127.0.0.1:8000",
     "http://localhost",
     "http://127.0.0.1",
-    "https://d3fa84aebcxk3f.cloudfront.net",
-    "http://d3fa84aebcxk3f.cloudfront.net",
+    "https://dev.sneaker-engine.com",
+    "https://www.sneaker-engine.com",
+    "https://sneaker-engine.com",
 ]
 
 app.add_middleware(

@@ -48,6 +48,22 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "domain_name" {
+  description = "Root domain name"
+  type        = string
+  default     = "sneaker-engine.com"
+}
+
+variable "subdomain" {
+  description = "Subdomain for the frontend (e.g., www, dev)"
+  type        = string
+}
+
+variable "backend_subdomain" {
+  description = "Subdomain for the backend (e.g., api, api-dev)"
+  type        = string
+}
+
 variable "db_instance_class" {
   description = "RDS instance class"
   type        = string

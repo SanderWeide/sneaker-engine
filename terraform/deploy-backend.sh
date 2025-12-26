@@ -20,6 +20,7 @@ docker push $ECR_URL:latest
 
 # Update ECS service
 echo "Updating ECS service..."
-aws ecs update-service --cluster $CLUSTER --service ${CLUSTER}-backend-service --force-new-deployment --region $REGION
+SERVICE_NAME=${CLUSTER%-cluster}-backend-service
+aws ecs update-service --cluster $CLUSTER --service $SERVICE_NAME --force-new-deployment --region $REGION
 
 echo "Backend deployed!"

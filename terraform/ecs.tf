@@ -64,6 +64,10 @@ resource "aws_ecs_task_definition" "backend" {
           value = var.environment
         },
         {
+          name  = "FRONTEND_URL"
+          value = "https://${var.subdomain}.${var.domain_name}"
+        },
+        {
           name  = "JWT_ALGORITHM"
           value = var.jwt_algorithm
         },
