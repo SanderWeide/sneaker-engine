@@ -1,0 +1,32 @@
+aws_region  = "eu-central-1"
+environment = "dev"
+
+# Database Configuration
+# IMPORTANT: Change these values!
+db_password = "CHANGE_ME_SECURE_PASSWORD"
+db_username = "postgres"
+db_name     = "sneaker_engine"
+
+# JWT Configuration
+# IMPORTANT: Change this value!
+jwt_secret_key         = "CHANGE_ME_SUPER_SECRET_JWT_KEY"
+jwt_algorithm          = "HS256"
+jwt_expiration_minutes = 1440
+
+# Backend Configuration
+backend_cpu            = 256
+backend_memory         = 512
+backend_desired_count  = 1
+backend_container_port = 8000
+
+# VPC Configuration
+availability_zones_count = 2  # Use 2 for high availability
+
+# RDS Configuration
+db_instance_class     = "db.t3.micro"
+db_allocated_storage  = 20
+
+# Optional: Custom Domain Configuration
+# Uncomment and configure if you have a custom domain
+# frontend_domain_name = "app.yourdomain.com"
+# acm_certificate_arn  = "arn:aws:acm:eu-central-1:123456789012:certificate/xxxxx"

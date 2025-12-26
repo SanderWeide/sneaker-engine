@@ -36,11 +36,11 @@
             "scripts": []
           },
           "configurations": {
-            "production": {
+            "prd": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.prd.ts"
                 }
               ],
               "budgets": [
@@ -63,13 +63,13 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "prd"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "buildTarget": "frontend:build:production"
+            "prd": {
+              "buildTarget": "frontend:build:prd"
             },
             "development": {
               "buildTarget": "frontend:build:development"
