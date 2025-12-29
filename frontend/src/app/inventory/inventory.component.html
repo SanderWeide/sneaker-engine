@@ -1,68 +1,227 @@
 <div class="inventory-container">
-  <h2>My Inventory</h2>
+  <div class="content">
+    <div class="header-section">
+      <h1>My Inventory</h1>
+      <p class="subtitle">Manage your sneaker collection</p>
+    </div>
 
-  <div class="create-sneaker-section">
-    <h3>Add New Sneaker</h3>
-    <form [formGroup]="sneakerForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="sku">SKU</label>
-        <input id="sku" type="text" formControlName="sku" class="input">
-      </div>
-      
-      <div class="form-group">
-        <label for="brand">Brand</label>
-        <input id="brand" type="text" formControlName="brand" class="input">
-      </div>
+    <div class="create-sneaker-card">
+      <h2>Add New Sneaker</h2>
+      <form [formGroup]="sneakerForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="sku">SKU</label>
+            <input 
+              id="sku" 
+              type="text" 
+              formControlName="sku" 
+              placeholder="Enter SKU"
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="brand">Brand</label>
+            <input 
+              id="brand" 
+              type="text" 
+              formControlName="brand" 
+              placeholder="e.g., Nike, Adidas"
+            >
+          </div>
 
-      <div class="form-group">
-        <label for="model">Model</label>
-        <input id="model" type="text" formControlName="model" class="input">
-      </div>
+          <div class="form-group">
+            <label for="model">Model</label>
+            <input 
+              id="model" 
+              type="text" 
+              formControlName="model" 
+              placeholder="e.g., Air Jordan 1"
+            >
+          </div>
 
-      <div class="form-group">
-        <label for="size">Size</label>
-        <input id="size" type="number" formControlName="size" class="input">
-      </div>
+          <div class="form-group">
+            <label for="size">Size</label>
+            <input 
+              id="size" 
+              type="number" 
+              formControlName="size" 
+              placeholder="EU Size"
+            >
+          </div>
 
-      <div class="form-group">
-        <label for="color">Color</label>
-        <input id="color" type="text" formControlName="color" class="input">
-      </div>
+          <div class="form-group">
+            <label for="color">Color</label>
+            <input 
+              id="color" 
+              type="text" 
+              formControlName="color" 
+              placeholder="Optional"
+            >
+          </div>
 
-      <div class="form-group">
-        <label for="purchase_price">Purchase Price</label>
-        <input id="purchase_price" type="number" formControlName="purchase_price" class="input">
-      </div>
+          <div class="form-group">
+            <label for="purchase_price">Purchase Price</label>
+            <input 
+              id="purchase_price" 
+              type="number" 
+              formControlName="purchase_price" 
+              placeholder="Optional"
+            >
+          </div>
 
-      <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" formControlName="description" class="input"></textarea>
-      </div>
+          <div class="form-group full-width">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              formControlName="description" 
+              placeholder="Optional - Add any additional details"
+            ></textarea>
+          </div>
+        </div>
 
-      <button type="submit" [disabled]="sneakerForm.invalid" class="btn-primary">Add Sneaker</button>
-    </form>
-  </div>
+        <button 
+          type="submit" 
+          [disabled]="sneakerForm.invalid || isLoading()" 
+          class="submit-btn"
+        >
+          @if (!isLoading()) {
+            <span>Add Sneaker</span>
+          }
+          @if (isLoading()) {
+            <span>Adding...</span>
+          }
+        </button>
+      </form>
+    </div>
 
-  <div class="sneaker-list">
-    <h3>Your Sneakers</h3>
-    @if (sneakers().length === 0) {
-      <p>No sneakers in your inventory yet.</p>
-    } @else {
-      <div class="grid">
-        @for (sneaker of sneakers(); track sneaker.id) {
-          <div class="card">
-            <h4>{{ sneaker.brand }} {{ sneaker.model }}</h4>
-            <p><strong>SKU:</strong> {{ sneaker.sku }}</p>
-            <p><strong>Size:</strong> {{ sneaker.size }}</p>
-            @if (sneaker.color) {
-              <p><strong>Color:</strong> {{ sneaker.color }}</p>
-            }
-            @if (sneaker.purchase_price) {
-              <p><strong>Price:</strong> ${{ sneaker.purchase_price }}</p>
+    <div class="sneaker-list-section">
+      <h2>Your Collection</h2>
+      @if (sneakers().length === 0) {
+        <div class="empty-state">
+          <p>No sneakers in your inventory yet.</p>
+          <p class="hint">Add your first sneaker using the form above!</p>
+        </div>
+      } @else {
+        <div class="filters-card">
+          <div class="filters-header">
+            <h3>Filters</h3>
+            @if (searchText() || selectedBrand() || selectedSize()) {
+              <button class="clear-filters-btn" (click)="clearFilters()">
+                Clear All
+              </button>
             }
           </div>
+          <div class="filters-grid">
+            <div class="filter-group">
+              <label for="search">Search</label>
+              <input
+                id="search"
+                type="text"
+                placeholder="Search by brand, model, SKU, or color"
+                [value]="searchText()"
+                (input)="searchText.set($any($event.target).value)"
+              >
+            </div>
+            <div class="filter-group">
+              <label for="brand">Brand</label>
+              <select
+                id="brand"
+                [value]="selectedBrand()"
+                (change)="selectedBrand.set($any($event.target).value)"
+              >
+                <option value="">All Brands</option>
+                @for (brand of availableBrands(); track brand) {
+                  <option [value]="brand">{{ brand }}</option>
+                }
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="size">Size</label>
+              <select
+                id="size"
+                [value]="selectedSize()"
+                (change)="selectedSize.set($any($event.target).value)"
+              >
+                <option value="">All Sizes</option>
+                @for (size of availableSizes(); track size) {
+                  <option [value]="size">{{ size }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="results-count">
+            Showing {{ filteredSneakers().length }} of {{ sneakers().length }} sneakers
+          </div>
+        </div>
+
+        @if (filteredSneakers().length === 0) {
+          <div class="no-results">
+            <p>No sneakers match your filters.</p>
+            <button class="clear-filters-btn" (click)="clearFilters()">
+              Clear Filters
+            </button>
+          </div>
+        } @else {
+          <div class="table-container">
+            <table class="sneaker-table">
+              <thead>
+                <tr>
+                  <th>Brand</th>
+                  <th>Model</th>
+                  <th>Size</th>
+                  <th>Color</th>
+                  <th>SKU</th>
+                  <th>Price</th>
+                  <th>Description</th>
+                  <th class="actions-header">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (sneaker of filteredSneakers(); track sneaker.id) {
+                  <tr (click)="viewSneaker(sneaker.id)" class="clickable-row">
+                    <td class="brand-cell">{{ sneaker.brand }}</td>
+                    <td class="model-cell">{{ sneaker.model }}</td>
+                    <td class="size-cell">
+                      <span class="size-badge">{{ sneaker.size }}</span>
+                    </td>
+                    <td class="color-cell">
+                      @if (sneaker.color) {
+                        <span>{{ sneaker.color }}</span>
+                      } @else {
+                        <span class="empty-value">—</span>
+                      }
+                    </td>
+                    <td class="sku-cell">
+                      <span class="sku-badge">{{ sneaker.sku }}</span>
+                    </td>
+                    <td class="price-cell">
+                      @if (sneaker.purchase_price) {
+                        <span class="price-value">${{ sneaker.purchase_price }}</span>
+                      } @else {
+                        <span class="empty-value">—</span>
+                      }
+                    </td>
+                    <td class="description-cell">
+                      @if (sneaker.description) {
+                        <span class="description-text">{{ sneaker.description }}</span>
+                      } @else {
+                        <span class="empty-value">—</span>
+                      }
+                    </td>
+                    <td class="actions-cell">
+                      <button class="action-btn" (click)="editSneaker($event, sneaker.id)" title="Edit sneaker">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12 5L14 7L7 14H5V12L12 5Z" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         }
-      </div>
-    }
+      }
+    </div>
   </div>
 </div>

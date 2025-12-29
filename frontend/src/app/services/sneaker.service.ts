@@ -27,6 +27,16 @@ export interface SneakerCreate {
   description?: string;
 }
 
+export interface SneakerUpdate {
+  sku?: string;
+  brand?: string;
+  model?: string;
+  size?: number;
+  color?: string;
+  purchase_price?: number;
+  description?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -44,5 +54,9 @@ export class SneakerService {
 
   createSneaker(sneaker: SneakerCreate): Observable<Sneaker> {
     return this.http.post<Sneaker>(this.apiUrl, sneaker);
+  }
+
+  updateSneaker(id: number, sneaker: SneakerUpdate): Observable<Sneaker> {
+    return this.http.put<Sneaker>(`${this.apiUrl}/${id}`, sneaker);
   }
 }

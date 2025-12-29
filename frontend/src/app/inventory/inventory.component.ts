@@ -1,6 +1,7 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SneakerService, Sneaker, SneakerCreate } from '../services/sneaker.service';
 import { AuthService } from '../services/auth.service';
 
@@ -14,8 +15,53 @@ import { AuthService } from '../services/auth.service';
 export class InventoryComponent implements OnInit {
   private sneakerService = inject(SneakerService);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   sneakers = signal<Sneaker[]>([]);
+  isLoading = signal<boolean>(false);
+  
+  // Filter signals
+  searchText = signal<string>('');
+  selectedBrand = signal<string>('');
+  selectedSize = signal<string>('');
+  
+  // Computed values for filters
+  availableBrands = computed(() => {
+    const brands = new Set(this.sneakers().map(s => s.brand));
+    return Array.from(brands).sort();
+  });
+  
+  availableSizes = computed(() => {
+    const sizes = new Set(this.sneakers().map(s => s.size.toString()));
+    return Array.from(sizes).sort((a, b) => parseFloat(a) - parseFloat(b));
+  });
+  
+  filteredSneakers = computed(() => {
+    let filtered = this.sneakers();
+    
+    // Filter by search text
+    const search = this.searchText().toLowerCase();
+    if (search) {
+      filtered = filtered.filter(s => 
+        s.brand.toLowerCase().includes(search) ||
+        s.model.toLowerCase().includes(search) ||
+        s.sku.toLowerCase().includes(search) ||
+        (s.color && s.color.toLowerCase().includes(search))
+      );
+    }
+    
+    // Filter by brand
+    if (this.selectedBrand()) {
+      filtered = filtered.filter(s => s.brand === this.selectedBrand());
+    }
+    
+    // Filter by size
+    if (this.selectedSize()) {
+      filtered = filtered.filter(s => s.size.toString() === this.selectedSize());
+    }
+    
+    return filtered;
+  });
   
   sneakerForm = new FormGroup({
     sku: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -42,7 +88,10 @@ export class InventoryComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.sneakerForm.valid) {
+    if (this.sneakerForm.valid && !this.isLoading()) {
+      this.isLoading.set(true);
+      this.sneakerForm.disable();
+      
       const formValue = this.sneakerForm.getRawValue();
       
       const newSneaker: SneakerCreate = {
@@ -59,9 +108,30 @@ export class InventoryComponent implements OnInit {
         next: (sneaker) => {
           this.sneakers.update(current => [...current, sneaker]);
           this.sneakerForm.reset();
+          this.sneakerForm.enable();
+          this.isLoading.set(false);
         },
-        error: (err) => console.error('Failed to create sneaker', err)
+        error: (err) => {
+          console.error('Failed to create sneaker', err);
+          this.sneakerForm.enable();
+          this.isLoading.set(false);
+        }
       });
     }
+  }
+
+  clearFilters(): void {
+    this.searchText.set('');
+    this.selectedBrand.set('');
+    this.selectedSize.set('');
+  }
+
+  viewSneaker(id: number): void {
+    this.router.navigate(['/sneaker', id]);
+  }
+
+  editSneaker(event: Event, id: number): void {
+    event.stopPropagation(); // Prevent row click from triggering
+    this.router.navigate(['/sneaker', id, 'edit']);
   }
 }

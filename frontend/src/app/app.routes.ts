@@ -13,5 +13,15 @@ export const routes: Routes = [
     path: 'inventory', 
     loadComponent: () => import('./inventory/inventory.component').then(m => m.InventoryComponent),
     canActivate: [authGuard] 
+  },
+  {
+    path: 'sneaker/:id',
+    loadComponent: () => import('./sneaker-detail/sneaker-detail.component').then(m => m.SneakerDetailComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'sneaker/:id/edit',
+    loadComponent: () => import('./sneaker-detail/sneaker-detail.component').then(m => m.SneakerDetailComponent),
+    canActivate: [authGuard]
   }
 ];
