@@ -54,7 +54,7 @@ class TestAuthEndpoints:
         self, client: TestClient, db_session: Session, test_password: str
     ):
         """Test successful login returns access token."""
-        from auth import get_password_hash
+        from auth_utils import get_password_hash
         
         # Create a user with known password
         user = UserFactory.build(

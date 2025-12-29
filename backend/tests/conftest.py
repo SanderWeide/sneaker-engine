@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 from database import Base
 from main import app
-from auth import get_password_hash
+from auth_utils import get_password_hash
 
 
 # Database URL for testing (in-memory SQLite)

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from database import engine, Base, get_db
-from routes import users_router, sneakers_router
+from routes import auth_router, users_router, sneakers_router
 
 load_dotenv()
 
@@ -39,6 +39,7 @@ app.add_middleware(
 )
 
 # Include routers
+app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(sneakers_router)
 

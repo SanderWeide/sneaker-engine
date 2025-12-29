@@ -3,7 +3,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from auth import get_password_hash
+from auth_utils import get_password_hash
 from tests.factories.user_factory import UserFactory
 from tests.factories.sneaker_factory import SneakerFactory
 
@@ -145,8 +145,16 @@ class TestSneakerEndpoints:
         assert response.status_code == 404
     
     def test_unauthorized_access(self, client: TestClient):
-        """Test that endpoints require authentication."""
-        response = client.get("/api/sneakers")
+        """Test that create endpoint requires authentication."""
+        sneaker_data = {
+            "sku": "SKU-12345678",
+            "brand": "Nike",
+            "model": "Air Max 90",
+            "size": 42.0,
+            "color": "White/Black",
+            "purchase_price": 120.00,
+        }
+        response = client.post("/api/sneakers", json=sneaker_data)
         assert response.status_code == 401
     
     def test_cannot_update_other_users_sneaker(

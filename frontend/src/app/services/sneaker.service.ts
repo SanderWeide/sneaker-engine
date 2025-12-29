@@ -25,7 +25,6 @@ export interface SneakerCreate {
   color?: string;
   purchase_price?: number;
   description?: string;
-  user_id: number;
 }
 
 @Injectable({

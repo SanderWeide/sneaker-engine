@@ -43,9 +43,6 @@ export class InventoryComponent implements OnInit {
 
   onSubmit(): void {
     if (this.sneakerForm.valid) {
-      const user = this.authService.currentUserValue;
-      if (!user) return;
-
       const formValue = this.sneakerForm.getRawValue();
       
       const newSneaker: SneakerCreate = {
@@ -55,8 +52,7 @@ export class InventoryComponent implements OnInit {
         size: formValue.size!,
         color: formValue.color || undefined,
         purchase_price: formValue.purchase_price || undefined,
-        description: formValue.description || undefined,
-        user_id: user.id
+        description: formValue.description || undefined
       };
 
       this.sneakerService.createSneaker(newSneaker).subscribe({

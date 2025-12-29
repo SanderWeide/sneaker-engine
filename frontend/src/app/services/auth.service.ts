@@ -51,7 +51,7 @@ export class AuthService {
     formData.append('username', email);
     formData.append('password', password);
 
-    return this.http.post<LoginResponse>(`${this.apiUrl}/api/users/login`, formData)
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, formData)
       .pipe(
         switchMap(response => {
           if (response.access_token) {
@@ -64,7 +64,7 @@ export class AuthService {
   }
 
   signup(data: SignupData): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/api/users`, data)
+    return this.http.post<User>(`${this.apiUrl}/auth/register`, data)
       .pipe(
         switchMap(() => {
           // After signup, automatically log in and get user profile

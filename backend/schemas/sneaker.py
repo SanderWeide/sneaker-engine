@@ -11,7 +11,6 @@ class SneakerBase(BaseModel):
     color: Optional[str] = Field(None, max_length=100)
     purchase_price: Optional[float] = Field(None, gt=0)
     description: Optional[str] = None
-    user_id: int
 
 
 class SneakerCreate(SneakerBase):
@@ -31,6 +30,7 @@ class SneakerUpdate(BaseModel):
 
 class Sneaker(SneakerBase):
     id: int
+    user_id: int
     created_at: datetime
     updated_at: Optional[datetime] = None
 

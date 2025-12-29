@@ -31,8 +31,8 @@ def get_sneakers(
     return query.offset(skip).limit(limit).all()
 
 
-def create_sneaker(db: Session, sneaker: SneakerCreate):
-    db_sneaker = Sneaker(**sneaker.model_dump())
+def create_sneaker(db: Session, sneaker: SneakerCreate, user_id: int):
+    db_sneaker = Sneaker(**sneaker.model_dump(), user_id=user_id)
     db.add(db_sneaker)
     db.commit()
     db.refresh(db_sneaker)
