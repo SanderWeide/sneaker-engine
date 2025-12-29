@@ -421,6 +421,15 @@ this.exampleService.getData().subscribe({
 
 ## Backend Conventions
 
+### Virtual Environment (venv)
+- The backend uses a Python virtual environment located in `backend/venv/`
+- When you `cd backend`, the venv is automatically activated
+- **IMPORTANT**: When running commands like `cd backend && another_command`, the `another_command` will NOT have access to the venv yet
+- For chained commands, either:
+  - Run `cd backend` first, then run your command in a separate step
+  - Use: `cd backend && source venv/bin/activate && your_command`
+  - Or run commands from within the backend directory after activation
+
 ### FastAPI Routes
 - Use proper HTTP methods: GET, POST, PUT, DELETE
 - All routes require authentication except `/auth/*`
