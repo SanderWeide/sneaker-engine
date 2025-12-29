@@ -1,0 +1,1 @@
+sudo lsof -ti:4200 | xargs -r sudo kill -9 && sudo lsof -ti:8000 | xargs -r sudo kill -9 && echo "Processes killed successfully"
