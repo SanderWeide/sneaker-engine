@@ -14,6 +14,110 @@
 - Polyfactory documentation: https://polyfactory.litestar.dev/latest/
 - **See also**: [copilot-backend-polyfactory-instructions.md](./copilot-backend-polyfactory-instructions.md) for detailed Polyfactory usage
 
+## CRITICAL: Keep Factories in Sync with Models
+
+**⚠️ ALWAYS update test factories when you modify SQLAlchemy models!**
+
+When you change a model in `models/`, you MUST update the corresponding factory in `tests/factories/`:
+
+### When Adding a Field to a Model
+```python
+# models/user.py - Added 'phone_number' field
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String(255), nullable=False)
+    phone_number = Column(String(20))  # NEW FIELD
+```
+
+**YOU MUST update the factory:**
+```python
+# tests/factories/user_factory.py
+from polyfactory import Use
+
+class UserFactory(BaseFactory):
+    __model__ = User
+    
+    email = Use(lambda: UserFactory.__faker__.email())
+    phone_number = Use(lambda: UserFactory.__faker__.phone_number())  # ADD THIS
+```
+
+### When Removing a Field from a Model
+```python
+# models/user.py - Removed 'middle_name' field
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String(255), nullable=False)
+    # middle_name removed
+```
+
+**YOU MUST update the factory:**
+```python
+# tests/factories/user_factory.py
+class UserFactory(BaseFactory):
+    __model__ = User
+    
+    email = Use(lambda: UserFactory.__faker__.email())
+    # REMOVE middle_name = Use(...)
+```
+
+### When Changing Field Constraints
+```python
+# models/user.py - Changed email to unique and required
+class User(Base):
+    __tablename__ = "users"
+    email = Column(String(255), unique=True, nullable=False)  # CHANGED
+```
+
+**Ensure factory generates unique values:**
+```python
+# tests/factories/user_factory.py
+class UserFactory(BaseFactory):
+    __model__ = User
+    
+    # Faker automatically generates unique emails in most cases,
+    # but you can add custom logic if needed
+    email = Use(lambda: UserFactory.__faker__.unique.email())
+```
+
+### When Adding Relationships
+```python
+# models/sneaker.py - Added relationship to User
+class Sneaker(Base):
+    __tablename__ = "sneakers"
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    owner = relationship("User", back_populates="sneakers")  # NEW
+```
+
+**Update factory to handle foreign keys:**
+```python
+# tests/factories/sneaker_factory.py
+class SneakerFactory(BaseFactory):
+    __model__ = Sneaker
+    
+    # Ensure user_id is provided when building
+    # Tests should pass user_id explicitly:
+    # sneaker = SneakerFactory.build(user_id=user.id)
+```
+
+### Checklist for Model Changes
+
+- [ ] Updated model in `models/`
+- [ ] Updated corresponding factory in `tests/factories/`
+- [ ] Ran all tests to ensure factories work: `pytest tests/test_factories.py -v`
+- [ ] Updated any affected test files
+- [ ] Ran full test suite: `pytest tests/ -v`
+
+### Why This Matters
+
+1. **Tests will fail** if factories don't match models
+2. **False positives** if factories generate invalid data
+3. **Debugging nightmare** when tests use outdated factories
+4. **CI/CD failures** that could have been caught early
+
+**Make it a habit**: Every time you touch `models/`, check `tests/factories/`!
+
 ## Test Discovery & Structure
 
 ### Project Layout

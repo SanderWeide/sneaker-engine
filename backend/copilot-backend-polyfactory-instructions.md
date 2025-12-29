@@ -11,6 +11,140 @@
 ## Polyfactory Documentation Reference
 - Full documentation: https://polyfactory.litestar.dev/latest/
 
+## ⚠️ CRITICAL: Keep Factories in Sync with Models
+
+**ALWAYS update test factories when you modify SQLAlchemy models!**
+
+Factories must mirror the structure of your models. When you change a model, immediately update its factory.
+
+### Model-Factory Synchronization Rules
+
+1. **Adding a field to a model** → Add corresponding field to factory
+2. **Removing a field from a model** → Remove field from factory
+3. **Changing field type** → Update factory field generator
+4. **Changing field constraints** (unique, nullable, etc.) → Update factory logic
+5. **Adding relationships** → Update factory to handle foreign keys
+6. **Changing field defaults** → Update factory to match
+
+### Example: Adding a Field
+
+```python
+# 1. Update model (models/user.py)
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String(255), nullable=False)
+    phone_number = Column(String(20))  # ← NEW FIELD
+```
+
+```python
+# 2. Update factory (tests/factories/user_factory.py)
+from polyfactory import Use
+
+class UserFactory(BaseFactory):
+    __model__ = User
+    
+    email = Use(lambda: UserFactory.__faker__.email())
+    phone_number = Use(lambda: UserFactory.__faker__.phone_number())  # ← ADD THIS
+```
+
+```python
+# 3. Verify with test
+def test_user_has_phone_number():
+    user = UserFactory.build()
+    assert user.phone_number is not None
+    assert len(user.phone_number) > 0
+```
+
+### Example: Removing a Field
+
+```python
+# 1. Remove from model
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String(255), nullable=False)
+    # middle_name removed ← FIELD REMOVED
+```
+
+```python
+# 2. Remove from factory
+class UserFactory(BaseFactory):
+    __model__ = User
+    
+    email = Use(lambda: UserFactory.__faker__.email())
+    # DELETE: middle_name = Use(...) ← REMOVE THIS LINE
+```
+
+### Example: Changing Field Type
+
+```python
+# 1. Change model field type
+class Sneaker(Base):
+    __tablename__ = "sneakers"
+    size = Column(String(10))  # Changed from Float to String ← TYPE CHANGE
+```
+
+```python
+# 2. Update factory to generate correct type
+class SneakerFactory(BaseFactory):
+    __model__ = Sneaker
+    
+    # OLD: size = Use(lambda: SneakerFactory.__random__.choice([7.0, 8.0, 9.0]))
+    size = Use(lambda: SneakerFactory.__random__.choice(["7", "7.5", "8", "8.5"]))  # ← UPDATE
+```
+
+### Quick Verification Checklist
+
+After changing a model, run these checks:
+
+```bash
+# 1. Test the factory itself
+pytest tests/test_factories.py -v
+
+# 2. Test that factory can build instances
+python -c "from tests.factories.user_factory import UserFactory; user = UserFactory.build(); print(user)"
+
+# 3. Run all tests
+pytest tests/ -v
+```
+
+### Common Mistakes to Avoid
+
+❌ **Don't forget to update factory after model change**
+```python
+# Added field to model but forgot to update factory
+# Result: Tests fail with missing attribute errors
+```
+
+❌ **Don't leave removed fields in factory**
+```python
+# Removed field from model but left it in factory
+# Result: Tests pass but use non-existent fields
+```
+
+❌ **Don't mismatch field types**
+```python
+# Model has Integer, factory generates String
+# Result: Type errors and test failures
+```
+
+✅ **Do update factory immediately after model change**  
+✅ **Do run factory tests after changes**  
+✅ **Do verify field types match**  
+✅ **Do handle new constraints (unique, nullable, etc.)**  
+
+### Automation Tip
+
+Add a pre-commit hook to remind you:
+
+```bash
+# .git/hooks/pre-commit
+if git diff --cached --name-only | grep -q "models/"; then
+    echo "⚠️  Model files changed! Did you update factories in tests/factories/?";
+fi
+```
+
 ## What is Polyfactory?
 
 Polyfactory is a simple and powerful **mock data generation library** based on type hints. It generates realistic test data automatically by analyzing your model's type annotations.
