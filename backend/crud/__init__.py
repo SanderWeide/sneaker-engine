@@ -14,6 +14,14 @@ from .sneaker import (
     update_sneaker,
     delete_sneaker,
 )
+from .proposition import (
+    get_proposition,
+    get_propositions,
+    get_user_propositions,
+    create_proposition,
+    update_proposition,
+    delete_proposition,
+)
 
 __all__ = [
     "get_user",
@@ -28,4 +36,10 @@ __all__ = [
     "create_sneaker",
     "update_sneaker",
     "delete_sneaker",
+    "get_proposition",
+    "get_propositions",
+    "get_user_propositions",
+    "create_proposition",
+    "update_proposition",
+    "delete_proposition",
 ]
