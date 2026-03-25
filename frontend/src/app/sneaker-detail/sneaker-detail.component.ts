@@ -7,7 +7,6 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-sneaker-detail',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './sneaker-detail.component.html',
   styleUrl: './sneaker-detail.component.scss'
