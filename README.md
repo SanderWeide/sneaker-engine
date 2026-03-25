@@ -1,12 +1,12 @@
 # Sneaker Engine
 
-A full-stack application with Angular 19 frontend and FastAPI backend.
+A full-stack application with Angular 20 frontend and FastAPI backend.
 
 ## Project Structure
 
 ```
 sneaker-engine/
-├── frontend/          # Angular 19 application
+├── frontend/          # Angular 20 application
 ├── backend/           # FastAPI application
 └── README.md          # This file
 ```

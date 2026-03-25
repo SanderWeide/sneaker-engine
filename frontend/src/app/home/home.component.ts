@@ -5,7 +5,6 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']

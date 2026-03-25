@@ -6,7 +6,6 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-signup',
-  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
